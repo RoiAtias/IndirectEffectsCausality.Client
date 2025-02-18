@@ -1,0 +1,140 @@
+<ng-container>
+  <mat-icon big-icon class="fc-primary">analytics</mat-icon>
+  <p class="fs-32">Indirect Effects Causality</p>
+
+  <mat-progress-bar [value]="(stepIndex + 1) * (100 / steps.length)"></mat-progress-bar>
+  <p class="fs-20">{{ steps[stepIndex].message }}</p>
+
+  <div class="spinner-container" *ngIf="isLoading">
+    <mat-spinner [diameter]="50"></mat-spinner>
+  </div>
+
+  <ng-container [ngSwitch]="steps[stepIndex].message">
+    <!-- Upload Dataset -->
+    <ng-container *ngSwitchCase="'Upload Dataset'">
+      <div class="upload-container">
+        <br>
+        <p class="fs-16">Please select the dataset you want to upload (only CSV files are allowed).</p>
+        <br>
+        <mat-form-field class="file-upload-field">
+          <mat-label>Dataset</mat-label>
+          <button mat-icon-button matPrefix (click)="f_input.click()">
+            <mat-icon>attach_file</mat-icon>
+          </button>
+          <input type="text" readonly matInput [value]="fileName" placeholder="No file chosen" />
+          <input type="file" multiple hidden #f_input (change)="handleFileInputChange($event)" accept=".csv" />
+          <mat-error *ngIf="!fileName">This field is required</mat-error>
+          <mat-error *ngIf="fileName && !isCsvFile">Only CSV files are allowed</mat-error>
+        </mat-form-field>
+      </div>
+    </ng-container>
+
+    <!-- Confounders Selection -->
+    <ng-container *ngSwitchCase="'Confounders Selection'">
+      <br>
+      <p class="fs-16">Please select the confounders that may influence the relationship between your variables.</p>
+      <br>
+      <mat-form-field>
+        <mat-label>Select Confounders</mat-label>
+        <mat-select multiple [(value)]="confounders">
+          <mat-option *ngFor="let option of confounderOptions" [value]="option">{{ option }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+
+    <!-- Predictor (X) -->
+    <ng-container *ngSwitchCase="'Predictor (X)'">
+      <br>
+      <p class="fs-16">Please select the predictor variable (X) that you believe influences the outcome.</p>
+      <br>
+      <mat-form-field>
+        <mat-label>Select Predictor (X)</mat-label>
+        <mat-select [(value)]="predictorX">
+          <mat-option *ngFor="let option of predictorOptions" [value]="option">{{ option }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+
+    <!-- Mediator (Y) -->
+    <ng-container *ngSwitchCase="'Mediator (Y)'">
+      <br>
+      <p class="fs-16">
+        Please select the mediator variable (Y) that you think plays a role in the relationship between
+        the predictor and the target.
+      </p>
+      <br>
+      <mat-form-field>
+        <mat-label>Select Mediator (Y)</mat-label>
+        <mat-select [(value)]="mediatorY">
+          <mat-option *ngFor="let option of mediatorOptions" [value]="option">{{ option }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    
+      <br>
+    
+      <p class="fs-16">
+        Please select the model type for the mediator.
+      </p>
+      <br>
+      <mat-form-field>
+        <mat-label>Select Model Type</mat-label>
+        <mat-select [(value)]="selectMediatorModel">
+          <mat-option *ngFor="let model of ['logistic', 'linear']" [value]="model">{{ model }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+    
+
+    <!-- Target Variable -->
+    <ng-container *ngSwitchCase="'Target Variable'">
+      <br>
+      <p class="fs-16">Please select the target variable that you aim to predict.</p>
+      <br>
+    
+      <!-- בחירת המשתנה ה-Target -->
+      <mat-form-field>
+        <mat-label>Select Target Variable</mat-label>
+        <mat-select [(value)]="targetVariable">
+          <mat-option *ngFor="let option of targetOptions" [value]="option">{{ option }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    
+      <br>
+    
+      <!-- בחירת סוג המודל -->
+      <mat-form-field>
+        <mat-label>Select Model Type</mat-label>
+        <mat-select [(value)]="slectedTargetVariable">
+          <mat-option *ngFor="let model of ['logistic', 'linear']" [value]="model">{{ model }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    
+    </ng-container>
+
+    <!-- Results -->
+    <ng-container *ngIf="responseData">
+      <br><p><strong>Total Effect:</strong> {{ responseData.total_effect }}</p>
+      <br><p><strong>Effect of Smoker on Overweight:</strong> {{ responseData.effect_of_smoker_on_overweight }}</p>
+      <br><p><strong>Direct Effect:</strong> {{ responseData.direct_effect }}</p>
+      <br><p><strong>Effect of Overweight on Heart Disease:</strong> {{ responseData.effect_of_overweight_on_heart_disease }}</p>
+      <br><p><strong>Indirect Effect:</strong> {{ responseData.indirect_effect }}</p>
+      <br><p><strong>Indirect Effect CI:</strong> {{ responseData.indirect_effect_ci }}</p>
+      <br><p><strong>Direct Effect CI:</strong> {{ responseData.direct_effect_ci }}</p>
+      <br><p><strong>Total Effect CI:</strong> {{ responseData.total_effect_ci }}</p>
+      <br><p><strong>NNT:</strong> {{ responseData.nnt }}</p>
+      <br><p><strong>NNT Confidence Interval:</strong> {{ responseData.nnt_confidence_interval }}</p>
+      <br>
+    </ng-container>
+
+
+    <div class="button-container" *ngIf="!isLoading">
+      <button mat-stroked-button (click)="previousStep()" [disabled]="stepIndex === 0">
+        Previous
+      </button>
+      <button mat-stroked-button color="primary" (click)="nextStep()" [disabled]="stepIndex === steps.length - 1">
+        Next
+      </button>
+    </div>
+  </ng-container>
+
+</ng-container>

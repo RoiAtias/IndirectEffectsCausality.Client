@@ -1,0 +1,111 @@
+:host {
+    text-align: center;
+    display: block;
+    margin: 30px auto;
+    width: 50%;
+    background: white;
+    padding: 25px 2%;
+    box-shadow: 0px 1px 2px 1px #80808082;
+    border-radius: 5px;
+    min-height: 80vh;
+}
+
+.movie-rec{
+    margin-bottom: 6%;
+    margin-top: 6%;
+}
+
+.fc-primary {
+    color: #03a9f4;
+}
+
+p {
+    margin: 5px 0;
+}
+
+.fs-20 {
+    font-size: 20px;
+}
+
+[big-icon] {
+    transform: scale(1.7);
+    margin: 15px 0;
+}
+main{
+    padding: 0 10%;
+}
+mat-progress-bar {
+    text-align: initial;
+    margin: 25px 0 40px;
+}
+
+form {
+    text-align: initial;
+    margin: 0 12%;
+
+    mat-form-field {
+        min-width: 100%;
+    }
+}
+
+  
+  .spinner-container {
+    margin-top: 10px; /* Adjust as needed */
+  }
+
+
+.file-input {
+    display: none;
+  }
+
+
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+.form-title {
+  font-size: 16px;
+  font-weight: bold;
+  width: auto;
+  align-self: flex-start;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  
+  .form-title {
+    font-size: 16px;
+    font-weight: bold;
+    align-self: flex-start;
+  }
+  
+  .file-upload-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .upload-btn {
+    margin-left: 10px;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center; /* ממרכז את הכפתורים אופקית */
+    gap: 10px; /* מרווח של 10 סנטימטרים בין הכפתורים */
+  }
+
+  .spinner-container {
+    position: fixed; /* מיקום קבוע */
+    top: 50%; /* ממורכז אנכית */
+    left: 50%; /* ממורכז אופקית */
+    transform: translate(-50%, -50%); /* זז בחצי ממדים כדי למרכז */
+    z-index: 1000; /* לוודא שה-spinner לא יכוסה על ידי אלמנטים אחרים */
+  }
