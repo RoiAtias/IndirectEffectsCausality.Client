@@ -98,14 +98,35 @@ form {
 
   .button-container {
     display: flex;
-    justify-content: center; /* ממרכז את הכפתורים אופקית */
-    gap: 10px; /* מרווח של 10 סנטימטרים בין הכפתורים */
+    justify-content: center; 
+    gap: 10px;
   }
 
   .spinner-container {
-    position: fixed; /* מיקום קבוע */
-    top: 50%; /* ממורכז אנכית */
-    left: 50%; /* ממורכז אופקית */
-    transform: translate(-50%, -50%); /* זז בחצי ממדים כדי למרכז */
-    z-index: 1000; /* לוודא שה-spinner לא יכוסה על ידי אלמנטים אחרים */
+    position: fixed; 
+    top: 50%;
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    z-index: 1000; 
+  }
+
+
+  .table-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 20px;
+  }
+  
+  .export-container {
+    text-align: right !important;
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px 0;
+  }
+  
+  table {
+    width: 100%;
+    max-width: 600px;
   }

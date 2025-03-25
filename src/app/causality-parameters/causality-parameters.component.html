@@ -1,6 +1,6 @@
 <ng-container>
   <mat-icon big-icon class="fc-primary">analytics</mat-icon>
-  <p class="fs-32">Indirect Effects Causality</p>
+  <p class="fs-32">NNT Mediation Analysis</p>
 
   <mat-progress-bar [value]="(stepIndex + 1) * (100 / steps.length)"></mat-progress-bar>
   <p class="fs-20">{{ steps[stepIndex].message }}</p>
@@ -91,7 +91,7 @@
       <p class="fs-16">Please select the target variable that you aim to predict.</p>
       <br>
     
-      <!-- בחירת המשתנה ה-Target -->
+
       <mat-form-field>
         <mat-label>Select Target Variable</mat-label>
         <mat-select [(value)]="targetVariable">
@@ -100,8 +100,10 @@
       </mat-form-field>
     
       <br>
-    
-      <!-- בחירת סוג המודל -->
+      <p class="fs-16">
+        Please select the model type for the Target Variable.
+      </p>
+
       <mat-form-field>
         <mat-label>Select Model Type</mat-label>
         <mat-select [(value)]="slectedTargetVariable">
@@ -112,19 +114,36 @@
     </ng-container>
 
     <!-- Results -->
-    <ng-container *ngIf="responseData">
-      <br><p><strong>Total Effect:</strong> {{ responseData.total_effect }}</p>
-      <br><p><strong>Effect of Smoker on Overweight:</strong> {{ responseData.effect_of_smoker_on_overweight }}</p>
-      <br><p><strong>Direct Effect:</strong> {{ responseData.direct_effect }}</p>
-      <br><p><strong>Effect of Overweight on Heart Disease:</strong> {{ responseData.effect_of_overweight_on_heart_disease }}</p>
-      <br><p><strong>Indirect Effect:</strong> {{ responseData.indirect_effect }}</p>
-      <br><p><strong>Indirect Effect CI:</strong> {{ responseData.indirect_effect_ci }}</p>
-      <br><p><strong>Direct Effect CI:</strong> {{ responseData.direct_effect_ci }}</p>
-      <br><p><strong>Total Effect CI:</strong> {{ responseData.total_effect_ci }}</p>
-      <br><p><strong>NNT:</strong> {{ responseData.nnt }}</p>
-      <br><p><strong>NNT Confidence Interval:</strong> {{ responseData.nnt_confidence_interval }}</p>
-      <br>
-    </ng-container>
+
+    <div class="export-container" *ngIf="responseData">
+      <button mat-icon-button color="primary" (click)="exportToCSV()">
+        <mat-icon>download</mat-icon>
+      </button>
+    </div>
+
+    <div class="table-container" *ngIf="responseData">
+
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    
+        <!-- Metric Column -->
+        <ng-container matColumnDef="metric">
+          <th mat-header-cell *matHeaderCellDef> Metric </th>
+          <td mat-cell *matCellDef="let element"> {{ element.metric }} </td>
+        </ng-container>
+    
+        <!-- Value Column -->
+        <ng-container matColumnDef="value">
+          <th mat-header-cell *matHeaderCellDef> Value </th>
+          <td mat-cell *matCellDef="let element"> {{ element.value }} </td>
+        </ng-container>
+    
+        <!-- Table Header and Rows -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    
+      </table>
+  
+    </div>
 
 
     <div class="button-container" *ngIf="!isLoading">

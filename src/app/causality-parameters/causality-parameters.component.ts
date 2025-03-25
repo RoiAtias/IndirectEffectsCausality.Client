@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { IndirectEffectsService } from '../indirect-effects.service';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-causality-parameters',
@@ -27,14 +28,17 @@ export class CausalityParametersComponent {
   fileName = '';
   isCsvFile: boolean = true;
   selectedFile: File | null = null; // משתנה לשמירת הקובץ
-  responseData: MediationResults | undefined;  // סוג המודל
+  responseData: MediationResults | null = null;
   confounderOptions = [];
   predictorOptions = [];
   mediatorOptions = [];
   targetOptions = [];
-  isLoading: boolean = false; 
+  isLoading: boolean = false;
   selectMediatorModel: string = '';
-  slectedTargetVariable: string= '';
+  slectedTargetVariable: string = '';
+
+  displayedColumns: string[] = ['metric', 'value'];
+  dataSource = new MatTableDataSource<any>([]);
 
   constructor(private indirectEffectsService: IndirectEffectsService) { }
 
@@ -48,6 +52,7 @@ export class CausalityParametersComponent {
   }
 
   previousStep() {
+    this.responseData = null;
     if (this.stepIndex > 0) {
       this.stepIndex--;
     }
@@ -98,16 +103,44 @@ export class CausalityParametersComponent {
 
       this.indirectEffectsService.sendResults(formData).subscribe(
         response => {
-          debugger;
           this.responseData = response.data;
           this.isLoading = false;
           console.log('Results successfully sent:', response);
+          this.dataSource.data = [
+            { metric: 'Total Effect', value: response.data.total_effect },
+            { metric: 'Effect of Smoker on Overweight', value: response.data.effect_of_smoker_on_overweight },
+            { metric: 'Direct Effect', value: response.data.direct_effect },
+            { metric: 'Effect of Overweight on Heart Disease', value: response.data.effect_of_overweight_on_heart_disease },
+            { metric: 'Indirect Effect', value: response.data.indirect_effect },
+            { metric: 'Indirect Effect CI', value: response.data.indirect_effect_ci },
+            { metric: 'Direct Effect CI', value: response.data.direct_effect_ci },
+            { metric: 'Total Effect CI', value: response.data.total_effect_ci },
+            { metric: 'NNT', value: response.data.nnt },
+            { metric: 'NNT Confidence Interval', value: response.data.nnt_confidence_interval }
+          ];
         },
         error => {
           console.error('Error sending results:', error);
         }
       );
     }
+  }
+
+  exportToCSV(): void {
+    let csvContent = 'data:text/csv;charset=utf-8,';
+    csvContent += 'Metric,Value\n';
+
+    this.dataSource.data.forEach(row => {
+      csvContent += `${row.metric},${row.value}\n`;
+    });
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', 'results.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 }
 
@@ -117,9 +150,9 @@ export interface MediationResults {
   direct_effect: number;
   effect_of_overweight_on_heart_disease: number;
   indirect_effect: number;
-  indirect_effect_ci: [number, number];  
-  direct_effect_ci: [number, number];   
-  total_effect_ci: [number, number];     
+  indirect_effect_ci: [number, number];
+  direct_effect_ci: [number, number];
+  total_effect_ci: [number, number];
   nnt: any,
   nnt_confidence_interval: any
 }
