@@ -42,29 +42,29 @@
       </mat-form-field>
     </ng-container>
 
-    <!-- Predictor (X) -->
-    <ng-container *ngSwitchCase="'Predictor (X)'">
+    <!-- Treatment-->
+    <ng-container *ngSwitchCase="'Treatment'">
       <br>
-      <p class="fs-16">Please select the predictor variable (X) that you believe influences the outcome.</p>
+      <p class="fs-16">Please select the treatment variable that you believe influences the outcome.</p>
       <br>
       <mat-form-field>
-        <mat-label>Select Predictor (X)</mat-label>
+        <mat-label>Select Treatment</mat-label>
         <mat-select [(value)]="predictorX">
           <mat-option *ngFor="let option of predictorOptions" [value]="option">{{ option }}</mat-option>
         </mat-select>
       </mat-form-field>
     </ng-container>
 
-    <!-- Mediator (Y) -->
-    <ng-container *ngSwitchCase="'Mediator (Y)'">
+    <!-- Mediator  -->
+    <ng-container *ngSwitchCase="'Mediator'">
       <br>
       <p class="fs-16">
-        Please select the mediator variable (Y) that you think plays a role in the relationship between
+        Please select the mediator variable that you think plays a role in the relationship between
         the predictor and the target.
       </p>
       <br>
       <mat-form-field>
-        <mat-label>Select Mediator (Y)</mat-label>
+        <mat-label>Select Mediator</mat-label>
         <mat-select [(value)]="mediatorY">
           <mat-option *ngFor="let option of mediatorOptions" [value]="option">{{ option }}</mat-option>
         </mat-select>
@@ -85,15 +85,15 @@
     </ng-container>
     
 
-    <!-- Target Variable -->
-    <ng-container *ngSwitchCase="'Target Variable'">
+    <!-- Outcome Variable -->
+    <ng-container *ngSwitchCase="'Outcome'">
       <br>
-      <p class="fs-16">Please select the target variable that you aim to predict.</p>
+      <p class="fs-16">Please select the outcome variable that you aim to predict.</p>
       <br>
     
 
       <mat-form-field>
-        <mat-label>Select Target Variable</mat-label>
+        <mat-label>Select Outcome</mat-label>
         <mat-select [(value)]="targetVariable">
           <mat-option *ngFor="let option of targetOptions" [value]="option">{{ option }}</mat-option>
         </mat-select>
@@ -101,7 +101,7 @@
     
       <br>
       <p class="fs-16">
-        Please select the model type for the Target Variable.
+        Please select the model type for the Outcome Variable.
       </p>
 
       <mat-form-field>
@@ -125,16 +125,28 @@
 
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
     
-        <!-- Metric Column -->
-        <ng-container matColumnDef="metric">
-          <th mat-header-cell *matHeaderCellDef> Metric </th>
-          <td mat-cell *matCellDef="let element"> {{ element.metric }} </td>
+        <!-- Effect Column -->
+        <ng-container matColumnDef="Effect">
+          <th mat-header-cell *matHeaderCellDef>
+            <span matTooltip="The target causal effect size parameters">Effect</span>
+          </th>
+          <td mat-cell *matCellDef="let element"> {{ element.Effect  }} </td>
         </ng-container>
     
-        <!-- Value Column -->
-        <ng-container matColumnDef="value">
-          <th mat-header-cell *matHeaderCellDef> Value </th>
-          <td mat-cell *matCellDef="let element"> {{ element.value }} </td>
+        <!-- Estiamtor  Column -->
+        <ng-container matColumnDef="Estiamtor">
+          <th mat-header-cell *matHeaderCellDef>
+            <span matTooltip="Point estimates of the target parameters">Estiamtor</span>
+          </th>
+          <td mat-cell *matCellDef="let element"> {{ element.Estiamtor }} </td>
+        </ng-container>
+
+        <!-- CI Confidence Interval  -->
+        <ng-container matColumnDef="95% CI" >
+          <th mat-header-cell *matHeaderCellDef>
+            <span matTooltip="95%-level nonparametric bootstrap-based confidence intervals">95% CI</span>
+          </th>
+          <td mat-cell *matCellDef="let element"> {{ element.CI }} </td>
         </ng-container>
     
         <!-- Table Header and Rows -->
@@ -142,8 +154,20 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     
       </table>
-  
+
     </div>
+
+    <div *ngIf="responseData" style="padding-top: 20px;padding-bottom: 20px;">
+
+    <mat-card class="example-card">
+      <mat-card-header>
+        <!-- <mat-card-title>Summary</mat-card-title> -->
+      </mat-card-header>
+      <mat-card-content>
+          <div [innerHTML]="nntSummary"></div>
+      </mat-card-content>
+    </mat-card>
+  </div>
 
 
     <div class="button-container" *ngIf="!isLoading">

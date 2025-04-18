@@ -9,3 +9,23 @@ p {
 .fs-32 {
     font-size: 32px;
 }
+.container {
+    height: 92.5vh;
+  }
+  
+.sidenav {
+    width: 400px;
+    background-color: #fafafa !important;
+    padding: 15px;
+  }
+
+  mat-card-content strong {
+    color: #2a7ae2;
+    font-weight: bold;
+  }
+
+  .interpretation-highlight {
+    font-weight: bold;
+    text-decoration: underline;
+    color: black !important;
+  }

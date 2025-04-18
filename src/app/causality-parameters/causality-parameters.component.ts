@@ -2,47 +2,66 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { IndirectEffectsService } from '../indirect-effects.service';
 import { MatTableDataSource } from '@angular/material/table';
+import { UserSelectionService } from '../user-selection.service';
 
 @Component({
   selector: 'app-causality-parameters',
   templateUrl: './causality-parameters.component.html',
-  styleUrls: ['./causality-parameters.component.css']
+  styleUrls: ['./causality-parameters.component.css'],
 })
 export class CausalityParametersComponent {
 
   stepIndex = 0;
+  selectedSteps = [];
 
   steps = [
     { message: 'Upload Dataset' },
     { message: 'Confounders Selection' },
-    { message: 'Predictor (X)' },
-    { message: 'Mediator (Y)' },
-    { message: 'Target Variable' },
+    { message: 'Treatment' },
+    { message: 'Mediator' },
+    { message: 'Outcome' },
     { message: 'Results' }
   ];
-
-  confounders: string[] = [];
-  predictorX: string = '';
-  mediatorY: string = '';
-  targetVariable: string = '';
   fileName = '';
   isCsvFile: boolean = true;
-  selectedFile: File | null = null; // משתנה לשמירת הקובץ
+  selectedFile: File | null = null;
   responseData: MediationResults | null = null;
   confounderOptions = [];
   predictorOptions = [];
   mediatorOptions = [];
   targetOptions = [];
   isLoading: boolean = false;
-  selectMediatorModel: string = '';
-  slectedTargetVariable: string = '';
 
-  displayedColumns: string[] = ['metric', 'value'];
+
+  displayedColumns: string[] = ['Effect', 'Estiamtor','95% CI'];
   dataSource = new MatTableDataSource<any>([]);
 
-  constructor(private indirectEffectsService: IndirectEffectsService) { }
+  // Test
+  confounders : string [] = ['Age', 'Sex'];
+  predictorX: string = 'Smoker';
+  mediatorY: string = 'overweight';
+  selectMediatorModel: string = 'logistic'
+  targetVariable: string = 'HeartDiseaseorAttack';
+  slectedTargetVariable: string = 'logistic';
+
+
+  
+  // confounders: string[] = [];
+  // predictorX: string = '';
+  // mediatorY: string = '';
+  // targetVariable: string = '';
+  // selectMediatorModel: string = '';
+  // slectedTargetVariable: string = '';
+
+
+  nntSummary = '';
+
+
+  constructor(private indirectEffectsService: IndirectEffectsService,
+              private userSelectionService: UserSelectionService) { }
 
   nextStep() {
+    this.updateUserSelections();
     if (this.stepIndex < this.steps.length - 1) {
       this.stepIndex++;
     }
@@ -93,7 +112,6 @@ export class CausalityParametersComponent {
     if (this.selectedFile) {
       const formData = new FormData();
       formData.append('file', this.selectedFile);
-
       formData.append('confounders', JSON.stringify(this.confounders));
       formData.append('predictorX', this.predictorX);
       formData.append('mediatorY', this.mediatorY);
@@ -104,19 +122,16 @@ export class CausalityParametersComponent {
       this.indirectEffectsService.sendResults(formData).subscribe(
         response => {
           this.responseData = response.data;
+
+          if(this.responseData != null) {
+            this.nntSummary = this.generateNNTSummary(this.responseData);
+          }
+
           this.isLoading = false;
-          console.log('Results successfully sent:', response);
           this.dataSource.data = [
-            { metric: 'Total Effect', value: response.data.total_effect },
-            { metric: 'Effect of Smoker on Overweight', value: response.data.effect_of_smoker_on_overweight },
-            { metric: 'Direct Effect', value: response.data.direct_effect },
-            { metric: 'Effect of Overweight on Heart Disease', value: response.data.effect_of_overweight_on_heart_disease },
-            { metric: 'Indirect Effect', value: response.data.indirect_effect },
-            { metric: 'Indirect Effect CI', value: response.data.indirect_effect_ci },
-            { metric: 'Direct Effect CI', value: response.data.direct_effect_ci },
-            { metric: 'Total Effect CI', value: response.data.total_effect_ci },
-            { metric: 'NNT', value: response.data.nnt },
-            { metric: 'NNT Confidence Interval', value: response.data.nnt_confidence_interval }
+            { Effect: 'NNT', Estiamtor: response.data.nnt, CI : response.data.nnt_confidence_interval },
+            { Effect: 'DNNT', Estiamtor: response.data.dnnt, CI: response.data.dnnt_confidence_interval },
+            { Effect: 'INNT', Estiamtor: response.data.innt, CI : response.data.innt_confidence_interval }
           ];
         },
         error => {
@@ -128,10 +143,11 @@ export class CausalityParametersComponent {
 
   exportToCSV(): void {
     let csvContent = 'data:text/csv;charset=utf-8,';
-    csvContent += 'Metric,Value\n';
+    csvContent += 'Effect,Estiamtor,CI\n';
 
     this.dataSource.data.forEach(row => {
-      csvContent += `${row.metric},${row.value}\n`;
+      debugger;
+      csvContent += `${row.Effect},${row.Estiamtor},${row.CI}\n`;
     });
 
     const encodedUri = encodeURI(csvContent);
@@ -142,18 +158,51 @@ export class CausalityParametersComponent {
     link.click();
     document.body.removeChild(link);
   }
-}
 
+  updateUserSelections() {
+    this.userSelectionService.setSelection('fileName', this.fileName);
+    this.userSelectionService.setSelection('confounders', this.confounders);
+    this.userSelectionService.setSelection('predictorX', this.predictorX);
+    this.userSelectionService.setSelection('mediatorY', this.mediatorY);
+    this.userSelectionService.setSelection('targetVariable', this.targetVariable);
+    this.userSelectionService.setSelection('selectMediatorModel', this.selectMediatorModel);
+    this.userSelectionService.setSelection('selectedTargetVariable', this.slectedTargetVariable);
+  }
+
+  interpretEffect(value: number): string {
+    if (value < 5) return "a strong effect";
+    if (value <= 15) return "a moderate effect";
+    return "a weak effect";
+  }
+  
+  generateNNTSummary(result: MediationResults): string {
+    const confoundersText = this.confounders && this.confounders.length
+      ? ` while controlling for ${this.confounders.map(c => `<strong>${c}</strong>`).join(', ')}`
+      : "";
+  
+    return `
+  Analyzing the effect of <strong>${this.predictorX}</strong> on <strong>${this.targetVariable}</strong>${confoundersText}, with <strong>${this.mediatorY}</strong> as a mediator
+  
+  <span class="interpretation-highlight">Interpretation:</span>
+
+  🔹 On average, ${result.nnt.toFixed(2)} individuals need to be exposed to <strong>${this.predictorX}</strong> in order to observe one additional case of <strong>${this.targetVariable}</strong> compared to non-exposed individuals.
+  
+  🔹 On average, ${result.innt.toFixed(2)} individuals need to be exposed to <strong>${this.predictorX}</strong> to observe one additional case of <strong>${this.targetVariable}</strong> that is attributable to the mediated (indirect) effect of <strong>${this.predictorX}</strong> through <strong>${this.mediatorY}</strong>.
+  
+  🔹 On average, ${result.dnnt.toFixed(2)} individuals need to be exposed to <strong>${this.predictorX}</strong> to observe one additional case of <strong>${this.targetVariable}</strong> that is caused directly by <strong>${this.predictorX}</strong>, while holding <strong>${this.mediatorY}</strong> fixed at the level it would have attained under <strong>${this.predictorX}</strong>.
+  `.trim();
+  }
+}
+  
 export interface MediationResults {
-  total_effect: number;
-  effect_of_smoker_on_overweight: number;
-  direct_effect: number;
-  effect_of_overweight_on_heart_disease: number;
   indirect_effect: number;
-  indirect_effect_ci: [number, number];
-  direct_effect_ci: [number, number];
-  total_effect_ci: [number, number];
-  nnt: any,
-  nnt_confidence_interval: any
+  total_effect: number;
+  direct_effect: number;
+  innt: number;
+  dnnt: number;
+  nnt: number;
+  nnt_confidence_interval: [number, number];
+  innt_confidence_interval: [number, number],
+  dnnt_confidence_interval: [number, number]
 }
 

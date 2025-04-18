@@ -1,11 +1,66 @@
-
 <mat-toolbar class="test">
   <mat-toolbar-row>
     <span>Final Project</span>
   </mat-toolbar-row>
 </mat-toolbar>
 
-<div>
-  <router-outlet></router-outlet>
-</div>
+<mat-sidenav-container class="container">
+  <mat-sidenav mode="side" opened class="sidenav">
+    <mat-toolbar>
+      <span class="fc-primary">Progress</span>
+  </mat-toolbar>
 
+ 
+
+    <ol>
+      <li [class.active]="selections.step == '0'">
+        <label>Dataset</label>
+        <ul>
+          <li><span>FileName:</span>&nbsp;<b> {{selections.fileName}}</b></li>
+        </ul>
+      </li>
+
+      <li>
+        <label>Confounders</label>
+        <ul>
+          <li><span>Name: </span><b> {{selections.confounders}}</b></li>
+        </ul>
+      </li>
+
+      <li>
+        <label>Treatment</label>
+        <ul>
+          <li><span>Treatment Name: </span><b> {{selections.predictorX}}</b></li>
+        </ul>
+      </li>
+
+
+      <li>
+        <label>Mediator</label>
+        <ul>
+          <li><span>Mediator Name: </span><b>{{selections.mediatorY}}</b></li>
+          <li><span>Model: </span><b>{{selections.selectMediatorModel}}</b></li>
+        </ul>
+      </li>
+
+      <li>
+        <label>Outcome</label>
+        <ul>
+          <li><span>Outcome Name: </span><b>{{selections.targetVariable}}</b></li>
+          <li><span>Model: </span><b>{{selections.selectedTargetVariable}}</b></li>
+        </ul>
+      </li>
+
+    </ol>
+
+
+  </mat-sidenav>
+
+
+  <mat-sidenav-content>
+    <!-- תוכן הדף -->
+    <div>
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
