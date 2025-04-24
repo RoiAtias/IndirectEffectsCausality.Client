@@ -9,6 +9,10 @@ p {
 .fs-32 {
     font-size: 32px;
 }
+
+.fs-20 {
+  font-size: 32px;
+}
 .container {
     height: 92.5vh;
   }

@@ -33,25 +33,25 @@ export class CausalityParametersComponent {
   isLoading: boolean = false;
 
 
-  displayedColumns: string[] = ['Effect', 'Estiamtor','95% CI'];
+  displayedColumns: string[] = ['Effect', 'Estiamtor','CI_LOWER','CI_UPPER'];
   dataSource = new MatTableDataSource<any>([]);
 
   // Test
-  confounders : string [] = ['Age', 'Sex'];
-  predictorX: string = 'Smoker';
-  mediatorY: string = 'overweight';
-  selectMediatorModel: string = 'logistic'
-  targetVariable: string = 'HeartDiseaseorAttack';
-  slectedTargetVariable: string = 'logistic';
+  // confounders : string [] = ['Age', 'Sex'];
+  // predictorX: string = 'Smoker';
+  // mediatorY: string = 'overweight';
+  // selectMediatorModel: string = 'logistic'
+  // targetVariable: string = 'HeartDiseaseorAttack';
+  // slectedTargetVariable: string = 'logistic';
 
 
   
-  // confounders: string[] = [];
-  // predictorX: string = '';
-  // mediatorY: string = '';
-  // targetVariable: string = '';
-  // selectMediatorModel: string = '';
-  // slectedTargetVariable: string = '';
+  confounders: string[] = [];
+  predictorX: string = '';
+  mediatorY: string = '';
+  targetVariable: string = '';
+  selectMediatorModel: string = '';
+  slectedTargetVariable: string = '';
 
 
   nntSummary = '';
@@ -129,9 +129,9 @@ export class CausalityParametersComponent {
 
           this.isLoading = false;
           this.dataSource.data = [
-            { Effect: 'NNT', Estiamtor: response.data.nnt, CI : response.data.nnt_confidence_interval },
-            { Effect: 'DNNT', Estiamtor: response.data.dnnt, CI: response.data.dnnt_confidence_interval },
-            { Effect: 'INNT', Estiamtor: response.data.innt, CI : response.data.innt_confidence_interval }
+            { Effect: 'INNT', Estiamtor: response.data.innt, CI_LOWER : response.data.innt_confidence_interval_lower, CI_UPPER : response.data.innt_confidence_interval_upper },
+            { Effect: 'DNNT', Estiamtor: response.data.dnnt, CI_LOWER: response.data.dnnt_confidence_interval_lower, CI_UPPER : response.data.dnnt_confidence_interval_upper },
+            { Effect: 'NNT', Estiamtor: response.data.nnt, CI_LOWER : response.data.nnt_confidence_interval_lower, CI_UPPER : response.data.nnt_confidence_interval_upper }
           ];
         },
         error => {
@@ -192,6 +192,19 @@ export class CausalityParametersComponent {
   🔹 On average, ${result.dnnt.toFixed(2)} individuals need to be exposed to <strong>${this.predictorX}</strong> to observe one additional case of <strong>${this.targetVariable}</strong> that is caused directly by <strong>${this.predictorX}</strong>, while holding <strong>${this.mediatorY}</strong> fixed at the level it would have attained under <strong>${this.predictorX}</strong>.
   `.trim();
   }
+
+  getEffectTooltip(effect: string): string {
+    switch (effect) {
+      case 'INNT':
+        return 'Indirect effect NNT';
+      case 'DNNT':
+        return 'Direct effect NNT';
+      case 'NNT':
+        return 'Total Effect NNT';
+      default:
+        return '';
+    }
+  }
 }
   
 export interface MediationResults {
@@ -201,8 +214,11 @@ export interface MediationResults {
   innt: number;
   dnnt: number;
   nnt: number;
-  nnt_confidence_interval: [number, number];
-  innt_confidence_interval: [number, number],
-  dnnt_confidence_interval: [number, number]
+  nnt_confidence_interval_lower: number,
+  nnt_confidence_interval_upper: number,
+  innt_confidence_interval_lower: number,
+  innt_confidence_interval_upper: number,
+  dnnt_confidence_interval_lower: number,
+  dnnt_confidence_interval_upper: number,
 }
 

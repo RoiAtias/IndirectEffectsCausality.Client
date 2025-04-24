@@ -1,6 +1,6 @@
 <ng-container>
   <mat-icon big-icon class="fc-primary">analytics</mat-icon>
-  <p class="fs-32">NNT Mediation Analysis</p>
+  <p class="fs-20">Effect Size Measures in Causal Mediation Analysis: Indirect, Direct, and Total NNT</p>
 
   <mat-progress-bar [value]="(stepIndex + 1) * (100 / steps.length)"></mat-progress-bar>
   <p class="fs-20">{{ steps[stepIndex].message }}</p>
@@ -79,7 +79,7 @@
       <mat-form-field>
         <mat-label>Select Model Type</mat-label>
         <mat-select [(value)]="selectMediatorModel">
-          <mat-option *ngFor="let model of ['logistic', 'linear']" [value]="model">{{ model }}</mat-option>
+          <mat-option *ngFor="let model of ['logistic', 'probit']" [value]="model">{{ model }}</mat-option>
         </mat-select>
       </mat-form-field>
     </ng-container>
@@ -107,7 +107,7 @@
       <mat-form-field>
         <mat-label>Select Model Type</mat-label>
         <mat-select [(value)]="slectedTargetVariable">
-          <mat-option *ngFor="let model of ['logistic', 'linear']" [value]="model">{{ model }}</mat-option>
+          <mat-option *ngFor="let model of ['logistic', 'probit']" [value]="model">{{ model }}</mat-option>
         </mat-select>
       </mat-form-field>
     
@@ -127,10 +127,12 @@
     
         <!-- Effect Column -->
         <ng-container matColumnDef="Effect">
-          <th mat-header-cell *matHeaderCellDef>
-            <span matTooltip="The target causal effect size parameters">Effect</span>
-          </th>
-          <td mat-cell *matCellDef="let element"> {{ element.Effect  }} </td>
+          <th mat-header-cell *matHeaderCellDef matTooltip="The target causal effect size parameters"> Effect </th>
+          <td mat-cell *matCellDef="let element">
+            <span [matTooltip]="getEffectTooltip(element.Effect)">
+              {{ element.Effect }}
+            </span>
+          </td>
         </ng-container>
     
         <!-- Estiamtor  Column -->
@@ -141,13 +143,21 @@
           <td mat-cell *matCellDef="let element"> {{ element.Estiamtor }} </td>
         </ng-container>
 
-        <!-- CI Confidence Interval  -->
-        <ng-container matColumnDef="95% CI" >
+        <!-- CI-LOWER Confidence Interval  -->
+        <ng-container matColumnDef="CI_LOWER" >
           <th mat-header-cell *matHeaderCellDef>
-            <span matTooltip="95%-level nonparametric bootstrap-based confidence intervals">95% CI</span>
+            <span matTooltip="95%-level nonparametric bootstrap-based confidence intervals">95% Lower</span>
           </th>
-          <td mat-cell *matCellDef="let element"> {{ element.CI }} </td>
+          <td mat-cell *matCellDef="let element"> {{ element.CI_LOWER }} </td>
         </ng-container>
+
+           <!-- CI-UPPER Confidence Interval  -->
+           <ng-container matColumnDef="CI_UPPER" >
+            <th mat-header-cell *matHeaderCellDef>
+              <span matTooltip="95%-level nonparametric bootstrap-based confidence intervals">95% Upper</span>
+            </th>
+            <td mat-cell *matCellDef="let element"> {{ element.CI_UPPER }} </td>
+          </ng-container>
     
         <!-- Table Header and Rows -->
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
