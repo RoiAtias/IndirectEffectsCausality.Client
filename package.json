@@ -21,7 +21,7 @@
     "@angular/platform-browser-dynamic": "^16.2.0",
     "@angular/router": "^16.2.0",
     "chart.js": "^4.4.3",
-    "ng2-charts": "^6.2.1",
+    "ng2-charts": "^4.1.1",
     "rxjs": "~7.8.0",
     "rxjs-take-while-inclusive": "^2.1.1",
     "tslib": "^2.3.0",
