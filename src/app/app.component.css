@@ -3,9 +3,8 @@
     left: 0;
     right: 0;
     box-shadow: 0 2px 6px #808080ba;
-    border-bottom: 3px solid #03a9f4;
+    background-color: #d7e3ff;
 }
-
 
 .mat-list-item {
     display: flex;
@@ -87,18 +86,16 @@ ul li a {
     cursor: pointer;
 }
 
-/* סגנון לברירת מחדל של ה-::before */
 ol> li::before {
   counter-increment: steps;
-  content: counter(steps);
-  background: gray; /* צבע ברירת מחדל */
+  /* content: counter(steps); */
+  background: gray; 
   padding: 2px 7px;
   color: white;
   border-radius: 50%;
   margin-right: 8px;
 }
 
-/* סגנון כאשר ה-li פעיל (active) */
 li.active::before {
   background-color: red !important;
 }

@@ -1,20 +1,15 @@
 <mat-toolbar class="test">
   <mat-toolbar-row>
-    <span>Final Project</span>
+    <span style="color: #005cbb;">Final Project</span>
   </mat-toolbar-row>
 </mat-toolbar>
 
 <mat-sidenav-container class="container">
   <mat-sidenav mode="side" opened class="sidenav">
-    <mat-toolbar>
-      <span class="fc-primary">Progress</span>
-  </mat-toolbar>
-
- 
 
     <ol>
       <li [class.active]="selections.step == '0'">
-        <label>Dataset</label>
+        <label style="font-size: 16px;;">Dataset</label>
         <ul>
           <li><span>FileName:</span>&nbsp;<b> {{selections.fileName}}</b></li>
         </ul>
@@ -57,7 +52,7 @@
   </mat-sidenav>
 
 
-  <mat-sidenav-content>
+  <mat-sidenav-content style="background-color: #faf9fd;">
     <!-- תוכן הדף -->
     <div>
       <router-outlet></router-outlet>
