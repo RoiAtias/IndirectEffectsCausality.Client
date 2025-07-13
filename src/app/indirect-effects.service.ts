@@ -11,8 +11,8 @@ export class IndirectEffectsService {
 
   constructor(private http: HttpClient) { }
   
-  private apiUrl = 'http://127.0.0.1:5000/api/indirectEffects';
-// private apiUrl = 'https://indirecteffectscausality-webapi.onrender.com/api/indirectEffects';
+  // private apiUrl = 'http://127.0.0.1:5000/api/indirectEffects';
+private apiUrl = 'https://indirecteffectscausality-webapi.onrender.com/api/indirectEffects';
 
   
 
