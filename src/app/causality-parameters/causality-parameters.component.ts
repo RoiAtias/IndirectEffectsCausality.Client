@@ -146,11 +146,13 @@ export class CausalityParametersComponent {
 
   exportToCSV(): void {
     let csvContent = 'data:text/csv;charset=utf-8,';
-    csvContent += 'Effect,Estiamtor,CI\n';
+    csvContent += 'Effect,Estiamtor,CI_LOWER,CI_UPPER\n';
 
     this.dataSource.data.forEach(row => {
-      csvContent += `${row.Effect},${row.Estiamtor},${row.CI}\n`;
+      csvContent += `${row.Effect},${row.Estiamtor},${row.CI_LOWER},${row.CI_UPPER}\n`;
     });
+
+
 
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
