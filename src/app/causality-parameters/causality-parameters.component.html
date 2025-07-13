@@ -184,7 +184,7 @@
       <button mat-stroked-button (click)="previousStep()" [disabled]="stepIndex === 0">
         Previous
       </button>
-      <button mat-stroked-button color="primary" (click)="nextStep()" [disabled]="stepIndex === steps.length - 1">
+      <button mat-stroked-button color="primary" (click)="nextStep()" [disabled]="stepIndex === steps.length - 1 && !IsFileUplouded">
         Next
       </button>
     </div>

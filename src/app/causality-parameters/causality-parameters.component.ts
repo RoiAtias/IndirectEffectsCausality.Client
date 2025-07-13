@@ -31,6 +31,7 @@ export class CausalityParametersComponent {
   mediatorOptions = [];
   targetOptions = [];
   isLoading: boolean = false;
+  IsFileUplouded: boolean = false;
 
 
   displayedColumns: string[] = ['Effect', 'Estiamtor','CI_LOWER','CI_UPPER'];
@@ -92,14 +93,16 @@ export class CausalityParametersComponent {
   }
 
   private uploadFile(file: File) {
+     this.isLoading = true;
     this.indirectEffectsService.uploadFile(file).subscribe(
       response => {
         console.log('File uploaded successfully:', response);
-
         this.confounderOptions = response.data?.Confounders || [];
         this.predictorOptions = response.data?.Predictor || [];
         this.mediatorOptions = response.data?.Mediator || [];
         this.targetOptions = response.data?.Target_Variable || [];
+        this.IsFileUplouded = true;
+        this.isLoading = false;
       },
       error => {
         console.error('Error uploading file:', error);
