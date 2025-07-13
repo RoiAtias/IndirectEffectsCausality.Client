@@ -146,7 +146,6 @@ export class CausalityParametersComponent {
     csvContent += 'Effect,Estiamtor,CI\n';
 
     this.dataSource.data.forEach(row => {
-      debugger;
       csvContent += `${row.Effect},${row.Estiamtor},${row.CI}\n`;
     });
 

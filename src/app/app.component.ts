@@ -18,6 +18,8 @@ export class AppComponent implements OnInit {
   ];
   
   stepIndex = 0;
+  isHealth = false;
+
 
   selections = {
     step: '',
@@ -53,6 +55,12 @@ export class AppComponent implements OnInit {
         return selections.targetVariable ? `${selections.targetVariable}, Model: ${selections.selectedTargetVariable}` : null;
       default:
         return null;
+    }
+  }
+
+  onChangeHealth(loading: boolean) {
+    if (!loading) {
+      this.isHealth = true;
     }
   }
 }

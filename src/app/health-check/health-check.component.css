@@ -1,0 +1,35 @@
+/* הסר או עדכן את הסלקטור כך שזה יהיה ל־overlay בלבד */
+.loading-overlay {
+  position: fixed; /* fixed במקום absolute */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  background-color: rgba(0, 0, 0, 0.5); /* רקע אפור שקוף כהה יותר */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* מעל כל דבר */
+}
+
+/* תוכל להסיר את הגבול והרקע של הקונטיינר כי הכל מכוסה */
+.health-check-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  /* רקע שקוף כדי שהטקסט יהיה גלוי, או שקוף לגמרי */
+  background-color: transparent;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-family: Arial, sans-serif;
+  color: white;
+  font-size: 1.2rem;
+  z-index: 10000;
+}

@@ -1,0 +1,11 @@
+<div *ngIf="loading" class="health-check-container">
+  <p>{{ statusMessage }}</p>
+
+  <div class="loading-overlay">
+    <mat-progress-spinner
+      mode="indeterminate"
+      color="primary"
+      diameter="50"
+    ></mat-progress-spinner>
+  </div>
+</div>

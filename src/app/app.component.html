@@ -5,6 +5,7 @@
 </mat-toolbar>
 
 <mat-sidenav-container class="container">
+<app-health-check *ngIf="isHealth == false" (isLoading)="onChangeHealth($event)"></app-health-check>
   <mat-sidenav mode="side" opened class="sidenav">
 
     <ol>
@@ -53,6 +54,7 @@
 
 
   <mat-sidenav-content style="background-color: #faf9fd;">
+
     <!-- תוכן הדף -->
     <div>
       <router-outlet></router-outlet>

@@ -28,11 +28,13 @@ import {MatListModule} from '@angular/material/list';
 import { CausalityParametersComponent } from './causality-parameters/causality-parameters.component';
 import { NavigationSkippedCode } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { HealthCheckComponent } from './health-check/health-check.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CausalityParametersComponent
+    CausalityParametersComponent,
+    HealthCheckComponent
   ],
   imports: [
     BrowserModule,
